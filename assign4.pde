@@ -187,7 +187,7 @@ void draw() {
       }
       if(shootFire && shootAble){
         shootX[shootNum]=fighterX;
-        shootY[shootNum]=fighterY;
+        shootY[shootNum]=fighterY+shootHeight/2;
       }
       for(int i=0;i<5;i++){
         image(shoot,shootX[i],shootY[i]);
@@ -261,6 +261,7 @@ void draw() {
       break;
   }
 }
+
 
 void keyPressed(){
   // fighter movement
