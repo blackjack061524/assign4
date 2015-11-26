@@ -8,7 +8,7 @@ int enemyWidth=60, enemyHeight=60, enemyX_first=-350, enemyY_first, enemySpeed=3
 int[] enemyX=new int[8], enemyY=new int[8]; 
 boolean[] flameFire=new boolean[10];
 int flameNum;
-int[] flameX=new int[10], flameY=new int[10], flamePicture=new int[10], flameCounter=new int[10];
+int[] flameX=new int[8], flameY=new int[8], flamePicture=new int[8], flameCounter=new int[8];
 boolean shootAble, shootFire;
 int shootWidth=31, shootHeight=27, shootX_first=-shootWidth, shootSpeed=5, shootNum;
 int[] shootX=new int[5], shootY=new int[5];
@@ -53,7 +53,7 @@ void draw() {
       for(int i=0;i<8;i++)
         enemyX[i]=641;
       flameNum=0;
-      for(int i=0;i<10;i++){
+      for(int i=0;i<8;i++){
         flameFire[i]=false;
         flamePicture[i]=0;
         flameCounter[i]=0;
@@ -179,11 +179,11 @@ void draw() {
         shootAble=false;
       else
         shootAble=true;
-      // bullet Counter
-      shootNum=0;
       for(int i=0;i<5;i++){
-        if(shootX[i]>0)
-          shootNum++;
+        if(shootX[i]==shootX_first){
+          shootNum=i;
+          break;
+        }
       }
       if(shootFire && shootAble){
         shootX[shootNum]=fighterX;
@@ -198,6 +198,12 @@ void draw() {
       shootFire=false;
       
       // hit enemy
+      for(int i=0;i<8;i++){
+        if(flameFire[i]==false){
+          flameNum=i;
+          break;
+        }
+      }
       for(int i=0;i<8;i++){
         // fighter hit enemy
         if(fighterX+fighterWidth>=enemyX[i] && fighterX<=enemyX[i]+enemyWidth && fighterY+fighterHeight>=enemyY[i] && fighterY<=enemyY[i]+enemyHeight){
@@ -220,26 +226,18 @@ void draw() {
       }
       
       // flame
-      if(flameFire[flameNum]){
-        // more than one flame
-        for(int i=0;i<8;i++){
-          if(fighterX+fighterWidth>=enemyX[i] && fighterX<=enemyX[i]+enemyWidth && fighterY+fighterHeight>=enemyY[i] && fighterY<=enemyY[i]+enemyHeight)
-            flameNum++;
-          for(int j=0;j<5;j++){
-            if(shootX[j]>=0 && shootX[j]+shootWidth>=enemyX[i] && shootX[j]<=enemyX[i]+enemyWidth && shootY[j]+shootHeight>=enemyY[i] && shootY[j]<=enemyY[i]+enemyHeight)
-              flameNum++;
+      for(int i=0;i<8;i++){
+        if(flameFire[i]){
+          image(flame[flamePicture[i]],flameX[i],flameY[i]);
+          flameCounter[i]++;
+          if(flameCounter[i]>6){
+            flameCounter[i]=0;
+            flamePicture[i]++;
           }
-          flameNum%=10;
-        }
-        image(flame[flamePicture[flameNum]],flameX[flameNum],flameY[flameNum]);
-        flameCounter[flameNum]++;
-        if(flameCounter[flameNum]>6){
-          flameCounter[flameNum]=0;
-          flamePicture[flameNum]++;
-        }
-        if(flamePicture[flameNum]>4){
-          flamePicture[flameNum]=0;
-          flameFire[flameNum]=false;
+          if(flamePicture[i]>4){
+            flamePicture[i]=0;
+            flameFire[i]=false;
+          }
         }
       }
 
